@@ -70,8 +70,16 @@
                         </HyperlinkButton>
                     </StackPanel>
                 </Grid>
-                <Grid Height="200">
-                    <TextBlock Text="test"/>
+                <Grid Height="100" Padding="40,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="辅助进程窗口" FontSize="30"/>
+                    <StackPanel Grid.Row="1" Margin="10" Orientation="Horizontal">
+                        <TextBlock Text="是否显示辅助进程控制台窗口(需要重启)" FontSize="25"/>
+                        <ToggleSwitch x:Name="ShowConsoleSwitch" Toggled="ShowConsoleSwitch_Toggled" Margin="20,0,0,0"/>
+                    </StackPanel>
                 </Grid>
                 <Grid Height="200">
                     <TextBlock Text="test"/>

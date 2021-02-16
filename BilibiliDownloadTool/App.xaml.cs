@@ -32,6 +32,7 @@ namespace BilibiliDownloadTool
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             NLog.GlobalDiagnosticsContext.Set("LogPath", ApplicationData.Current.LocalFolder.Path + "\\");
+            _logger.Info("\n程序启动");
             Current.UnhandledException += (s, e) =>
             {
                 _logger.Fatal(e.Exception, e.Message);
@@ -113,19 +114,33 @@ namespace BilibiliDownloadTool
             base.OnBackgroundActivated(args);
             if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
             {
-                if (details.CallerPackageFamilyName==Package.Current.Id.FamilyName)
+                if (details.CallerPackageFamilyName == Package.Current.Id.FamilyName)
                 {
-                    _appServiceDeferral = args.TaskInstance.GetDeferral();
-                    args.TaskInstance.Canceled += (s, e) =>
+                    try
                     {
-                        _appServiceDeferral?.Complete();
-                        _appServiceDeferral = null;
-                        Connection = null;
-                        AppServiceDisconnected?.Invoke(this, null);
-                    };
-                    Connection = details.AppServiceConnection;
-                    AppServiceConnected?.Invoke(this, args.TaskInstance.TriggerDetails as AppServiceTriggerDetails);
+                        _appServiceDeferral = args.TaskInstance.GetDeferral();
+                        args.TaskInstance.Canceled += (s, e) =>
+                        {
+                            _appServiceDeferral?.Complete();
+                            _appServiceDeferral = null;
+                            Connection = null;
+                            AppServiceDisconnected?.Invoke(this, null);
+                        };
+                        Connection = details.AppServiceConnection;
+                        AppServiceConnected?.Invoke(this, args.TaskInstance.TriggerDetails as AppServiceTriggerDetails);
+                        _logger.Info("辅助进程服务连接成功");
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.Error("辅助进程服务连接失败");
+                        _logger.Error(ex);
+                    }
                 }
+            }
+            else
+            {
+                _logger.Error("辅助进程服务连接失败");
+                _logger.Error(args.TaskInstance.TriggerDetails.GetType());
             }
         }
         #endregion

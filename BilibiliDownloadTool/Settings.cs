@@ -29,6 +29,11 @@ namespace BilibiliDownloadTool
             get => GetValue<bool>("CompleteNotice");
             set => SetValue("CompleteNotice", value);
         }
+        public static bool NeedShowConsole
+        {
+            get => GetValue<bool>(nameof(NeedShowConsole));
+            set => SetValue(nameof(NeedShowConsole), value);
+        }
         private static T GetValue<T>(string name) where T : struct
         {
             var v = ApplicationData.Current.LocalSettings.Values[name];

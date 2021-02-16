@@ -30,6 +30,7 @@ namespace BilibiliDownloadTool.Pages
                 DownloadPathTextBox.Text = Settings.DownloadPath;
             AutoDlDanmakuSwitch.IsOn = Settings.AutoDlDanmaku;
             NoticeSwitch.IsOn = Settings.CompleteNotice;
+            ShowConsoleSwitch.IsOn = Settings.NeedShowConsole;
             RootDirTextBlock.Text = Directory.GetParent(ApplicationData.Current.LocalFolder.Path).FullName;
             InitLogsComboBox();
         }
@@ -78,6 +79,11 @@ namespace BilibiliDownloadTool.Pages
         private void RootDirBtn_Click(object sender, RoutedEventArgs e)
         {
             _ = Launcher.LaunchFolderPathAsync(RootDirTextBlock.Text);
+        }
+
+        private void ShowConsoleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            Settings.NeedShowConsole = ShowConsoleSwitch.IsOn;
         }
     }
 }
