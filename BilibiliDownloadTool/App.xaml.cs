@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -102,6 +103,19 @@ namespace BilibiliDownloadTool
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        protected async override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+            if (args is ToastNotificationActivatedEventArgs toastArgs)
+            {
+                var arg = toastArgs.Argument.Split("\n");
+                if (arg[0] == "video")
+                {
+                    _ = Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(arg[1]));
+                }
+            }
         }
 
         #region AppService Codes

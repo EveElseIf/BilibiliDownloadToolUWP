@@ -29,6 +29,9 @@
             ItemInvoked="NavView_ItemInvoked"
             IsTitleBarAutoPaddingEnabled="False"
             PaneDisplayMode="Auto">
+            <control:NavigationView.Resources>
+                
+            </control:NavigationView.Resources>
             <control:NavigationView.MenuItems>
                 <control:NavigationViewItem x:Name="DownloadItem" Icon="Download" Content="下载"/>
                 <control:NavigationViewItem x:Name="SearchItem" Icon="Find" Content="搜索"/>

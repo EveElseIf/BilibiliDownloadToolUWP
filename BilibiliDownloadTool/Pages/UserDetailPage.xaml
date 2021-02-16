@@ -5,12 +5,14 @@
     xmlns:local="using:BilibiliDownloadTool.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cui="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ani="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d"
     Background="Transparent">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="120"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ProgressRing x:Name="InitializingProgressRing"
@@ -20,8 +22,8 @@
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Image x:Name="AvatarImage" Grid.Column="0" Height="100" Width="100"/>
-            <TextBlock Grid.Column="1" Text="用户名" x:Name="UserNameTextBlock"
+            <Image d:Source="/Assets/StoreLogo.png" x:Name="AvatarImage" Grid.Column="0" Height="100" Width="100"/>
+            <TextBlock Grid.Column="1" d:Text="用户名" x:Name="UserNameTextBlock"
                        FontFamily="Microsoft Yahei UI" FontSize="50" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="1">
@@ -38,23 +40,29 @@
                     <PivotItem Header="收藏夹">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" MaxWidth="300"/>
                                 <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
-                            <ListView Grid.Column="0" x:Name="FavListView" Loaded="FavListView_Loaded" SelectedItem="null" SelectionChanged="FavListView_SelectionChanged">
+                            <ListView Grid.Column="0" x:Name="FavListView" 
+                                      Loaded="FavListView_Loaded" SelectedItem="null" 
+                                      SelectionChanged="FavListView_SelectionChanged">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="local:FavViewModel">
                                         <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{x:Bind Title}" FontFamily="Microsoft Yahei UI" FontSize="20"/>
+                                            <TextBlock Text="{Binding Title}" FontFamily="Microsoft Yahei UI" FontSize="20"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{x:Bind VideoCount}" FontFamily="Microsoft Yahei UI" FontSize="15"/>
+                                                <TextBlock Text="{Binding VideoCount}" FontFamily="Microsoft Yahei UI" FontSize="15"/>
                                                 <TextBlock Text="个视频" FontFamily="Microsoft Yahei UI" FontSize="15"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
+                                <d:ListView.Items>
+                                    <local:FavViewModel Title="收藏夹1" VideoCount="14123"/>
+                                    <local:FavViewModel Title="收藏夹2" VideoCount="532453"/>
+                                </d:ListView.Items>
                             </ListView>
-                            <GridView Grid.Column="1" x:Name="FavVideoGridView" IsItemClickEnabled="True" ItemClick="FavVideoGridView_ItemClick">
+                            <!--<GridView Grid.Column="1" x:Name="FavVideoGridView" IsItemClickEnabled="True" ItemClick="FavVideoGridView_ItemClick">
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="local:FavVideoViewModel">
                                         <RelativePanel>
@@ -75,11 +83,38 @@
                                         <EntranceThemeTransition FromHorizontalOffset="400"/>
                                     </TransitionCollection>
                                 </GridView.ItemContainerTransitions>
-                            </GridView>
+                            </GridView>-->
+                            <cui:AdaptiveGridView Grid.Column="1" x:Name="FavVideoGridView"
+                                                  IsItemClickEnabled="True" ItemClick="FavVideoGridView_ItemClick"
+                                                  DesiredWidth="280" ItemHeight="250"
+                                                  ani:ReorderGridAnimation.Duration="300"
+                                                  OneRowModeEnabled="False" StretchContentForSingleRow="True">
+                                <cui:AdaptiveGridView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:FavVideoViewModel">
+                                        <RelativePanel>
+                                            <Grid Margin="20" MaxWidth="400">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition Height="50"/>
+                                                </Grid.RowDefinitions>
+                                                <Image Grid.Row="0" Source="{x:Bind CoverImg}" Stretch="UniformToFill"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Row="1" Text="{x:Bind Title}" TextWrapping="Wrap"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Top"
+                                                           FontFamily="Microsoft Yahei UI" FontSize="20"/>
+                                            </Grid>
+                                        </RelativePanel>
+                                    </DataTemplate>
+                                </cui:AdaptiveGridView.ItemTemplate>
+                                <cui:AdaptiveGridView.ItemContainerTransitions>
+                                    <EntranceThemeTransition FromHorizontalOffset="400"/>
+                                </cui:AdaptiveGridView.ItemContainerTransitions>
+                            </cui:AdaptiveGridView>
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="追番">
-                        <GridView x:Name="BangumiListGridView" Loaded="BangumiListGridView_Loaded" IsItemClickEnabled="True" ItemClick="BangumiListGridView_ItemClick">
+                        <!--<GridView x:Name="BangumiListGridView" Loaded="BangumiListGridView_Loaded" IsItemClickEnabled="True" ItemClick="BangumiListGridView_ItemClick">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="local:BangumiViewModel">
                                     <Grid Width="300" Margin="20">
@@ -97,7 +132,35 @@
                                     <EntranceThemeTransition FromHorizontalOffset="400"/>
                                 </TransitionCollection>
                             </GridView.ItemContainerTransitions>
-                        </GridView>
+                        </GridView>-->
+                        <cui:AdaptiveGridView x:Name="BangumiListGridView" 
+                                              DesiredWidth="320"
+                                              ani:ReorderGridAnimation.Duration="300"
+                                              Loaded="BangumiListGridView_Loaded" IsItemClickEnabled="True" 
+                                              ItemClick="BangumiListGridView_ItemClick">
+                            <cui:AdaptiveGridView.ItemTemplate>
+                                <DataTemplate x:DataType="local:BangumiViewModel">
+                                    <Grid Margin="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="60"/>
+                                        </Grid.RowDefinitions>
+                                        <Image Grid.Row="0" Stretch="UniformToFill"
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               Source="{x:Bind CoverImg}"/>
+                                        <TextBlock Grid.Row="1" Text="{x:Bind Title}" TextWrapping="Wrap"
+                                                   VerticalAlignment="Top"
+                                                   HorizontalAlignment="Center"
+                                                   FontFamily="Microsoft Yahei UI" FontSize="20"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </cui:AdaptiveGridView.ItemTemplate>
+                            <cui:AdaptiveGridView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition FromHorizontalOffset="400"/>
+                                </TransitionCollection>
+                            </cui:AdaptiveGridView.ItemContainerTransitions>
+                        </cui:AdaptiveGridView>
                     </PivotItem>
                 </Pivot>
                 <HyperlinkButton Grid.Row="999" x:Name="LogoutBtn" Click="LogoutBtn_Click">

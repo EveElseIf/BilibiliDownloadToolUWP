@@ -132,6 +132,7 @@
     <Compile Include="Download\BiliDashDownload.cs" />
     <Compile Include="Download\BiliDashDownloadPart.cs" />
     <Compile Include="Download\BiliDownloadStatus.cs" />
+    <Compile Include="Download\Helper.cs" />
     <Compile Include="Download\IBiliDownload.cs" />
     <Compile Include="Download\IBiliDownloadPart.cs" />
     <Compile Include="Entities\CompleteItem.cs" />

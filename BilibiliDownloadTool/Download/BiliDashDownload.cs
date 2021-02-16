@@ -1,7 +1,6 @@
 ﻿using BilibiliDownloadTool.Core.Video;
 using BilibiliDownloadTool.Extensions;
 using BilibiliDownloadTool.Pages;
-using Microsoft.Toolkit.Uwp.Notifications;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking.BackgroundTransfer;
 using Windows.Storage;
-using Windows.UI.Notifications;
 
 namespace BilibiliDownloadTool.Download
 {
@@ -121,13 +119,7 @@ namespace BilibiliDownloadTool.Download
             OutputPath = outputFile.Path;
             Status = BiliDownloadStatus.Completed;
             if (Settings.CompleteNotice)//如果需要通知，就发送下载完成通知
-            {
-                var content = new ToastContentBuilder().AddToastActivationInfo("downloadCompleted", ToastActivationType.Foreground)
-                    .AddText("下载完成")
-                    .AddText($"{title} - {downloadName}")
-                    .GetToastContent();
-                ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(content.GetXml()));
-            }
+                Helper.ShowCompleteNotice(this);
             Completed?.Invoke(this, null);
             DownloadPage.Current.RemoveDownload(this);
         }
