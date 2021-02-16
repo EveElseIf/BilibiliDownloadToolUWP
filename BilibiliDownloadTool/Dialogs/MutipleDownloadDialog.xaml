@@ -1,0 +1,55 @@
+﻿<ContentDialog
+    x:Class="BilibiliDownloadTool.Dialogs.MutipleDownloadDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BilibiliDownloadTool.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="{x:Bind _vm.Title}"
+    PrimaryButtonText="下载所选项"
+    SecondaryButtonText="取消"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid Height="300" Width="500">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="videoListView" ItemsSource="{x:Bind _vm.Collection}" SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:MutipleDownloadDialogItem">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ToDownload,Mode=TwoWay}" Margin="2,0,0,0" />
+                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" FontFamily="Microsoft Yahei UI"
+                                   FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid Grid.Row="1">
+            <CheckBox x:Name="SelectAllCheckBox" Click="SelectAllCheckBox_Click" Margin="15,0,0,0"/>
+            <TextBlock VerticalAlignment="Center" Text="全选" FontFamily="Microsoft Yahei UI" FontSize="15" Margin="50,0,0,0"/>
+            <TextBlock Text="下载清晰度" VerticalAlignment="Center" HorizontalAlignment="Right"
+                       Margin="0,0,150,0" FontFamily="Microsoft Yahei UI" FontSize="15"/>
+            <ComboBox x:Name="QualityComboBox" VerticalAlignment="Center"
+                      DisplayMemberPath="Text" SelectedValuePath="Value"
+                      HorizontalAlignment="Right"
+                      Margin="0,0,15,0" Width="120"
+                      ItemsSource="{x:Bind ComboBoxDatas}"/>
+        </Grid>
+    </Grid>
+</ContentDialog>

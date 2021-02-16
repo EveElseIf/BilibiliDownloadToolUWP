@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="BilibiliDownloadTool.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BilibiliDownloadTool"
+    xmlns:page="using:BilibiliDownloadTool.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:control="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+
+        <Border x:Name="AppTitleBar" IsHitTestVisible="True" VerticalAlignment="Top"
+                Background="Transparent" Height="{Binding ElementName=NavView,Path=CompactPaneLength}"
+                Canvas.ZIndex="1">
+            <TextBlock x:Name="AppTitle"
+                       Text="{x:Bind GetAppTitleFromSystem()}"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Margin="60,0,0,0"/>
+        </Border>
+
+        <control:NavigationView
+            x:FieldModifier="public"
+            Canvas.ZIndex="0"
+            x:Name="NavView" 
+            ItemInvoked="NavView_ItemInvoked"
+            IsTitleBarAutoPaddingEnabled="False"
+            PaneDisplayMode="Auto">
+            <control:NavigationView.MenuItems>
+                <control:NavigationViewItem x:Name="DownloadItem" Icon="Download" Content="下载"/>
+                <control:NavigationViewItem x:Name="SearchItem" Icon="Find" Content="搜索"/>
+                <control:NavigationViewItem x:Name="UserItem" Icon="Contact" Content="用户"/>
+            </control:NavigationView.MenuItems>
+            <control:NavigationView.Content>
+                <Frame x:Name="ContentFrame" Margin="0,40,0,0" SourcePageType="page:DownloadPage" x:FieldModifier="public"/>
+            </control:NavigationView.Content>
+        </control:NavigationView>
+
+    </Grid>
+</Page>

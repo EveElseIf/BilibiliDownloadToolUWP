@@ -1,0 +1,76 @@
+﻿<Page
+    x:Class="BilibiliDownloadTool.Pages.ResultPages.BiliVideoMasterResultPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BilibiliDownloadTool.Pages.ResultPages"
+    xmlns:control="using:Microsoft.UI.Xaml.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:m ="using:BilibiliDownloadTool.Core.Video"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <control:TeachingTip x:Name="Tip" Title="已创建下载任务"
+                             PreferredPlacement="BottomRight"
+                             IsLightDismissEnabled="True">
+            <control:TeachingTip.IconSource>
+                <control:SymbolIconSource Symbol="Add"/>
+            </control:TeachingTip.IconSource>
+        </control:TeachingTip>
+        <control:TeachingTip x:Name="Tip2" Title="已下载封面"
+                             PreferredPlacement="BottomRight"
+                             IsLightDismissEnabled="True">
+            <control:TeachingTip.IconSource>
+                <control:SymbolIconSource Symbol="Download"/>
+            </control:TeachingTip.IconSource>
+        </control:TeachingTip>
+        <CommandBar Grid.Row="0" DefaultLabelPosition="Right" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+            <AppBarButton x:Name="DownloadMultipleBtn" Icon="Download" Label="批量下载" Click="DownloadMultipleBtn_Click"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="下载封面" x:Name="DownloadCoverBtn" Click="DownloadCoverBtn_Click"/>
+                <AppBarButton Label="下载所有弹幕xml" x:Name="DownloadDanmakuXmlBtn" Click="DownloadDanmakuXmlBtn_Click"/>
+                <AppBarButton Label="下载所有弹幕ass" x:Name="DownloadDanmakuAssBtn" Click="DownloadDanmakuAssBtn_Click"/>
+            </CommandBar.SecondaryCommands>
+            <CommandBar.Content>
+                <TextBlock Text="{x:Bind Title}" FontSize="30" Margin="20,0,0,0"/>
+            </CommandBar.Content>
+        </CommandBar>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Image x:Name="CoverImage" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                    <ListView x:Name="videoListView" SelectionMode="None" ScrollViewer.VerticalScrollMode="Enabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="m:BiliVideo">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="75"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{x:Bind Name}" VerticalAlignment="Center"
+                                           FontSize="20" TextWrapping="Wrap"/>
+                                <control:DropDownButton Grid.Column="1" Content="下载" Click="SingleDownloadBtn_Click"/>
+                            </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

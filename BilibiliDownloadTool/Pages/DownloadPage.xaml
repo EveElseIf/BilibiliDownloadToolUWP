@@ -1,0 +1,143 @@
+﻿<Page
+    x:Class="BilibiliDownloadTool.Pages.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BilibiliDownloadTool.Pages"
+    xmlns:dl ="using:BilibiliDownloadTool.Download"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Microsoft Yahei UI"/>
+        </Style>
+        <local:BiliDownloadStatusToStringConverter x:Key="statusConverter"/>
+        <local:DownloadSpeedToStringConverter x:Key="speedConverter"/>
+        <local:BiliDownloadStatusToIconConverter x:Key="statusConverter2"/>
+        <local:SizeToStringConverter x:Key="sizeConverter"/>
+        <local:CountToStringConverter x:Key="countConverter"/>
+        <Style TargetType="ListViewItem" x:Key="ListViewStyle1">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        </Style>
+
+        <CollectionViewSource x:Name="completeGroups" Source="{x:Bind Groups}"
+                              IsSourceGrouped="True" ItemsPath="Completes"/>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="下载列表" VerticalAlignment="Center" FontSize="50" Margin="20"/>
+        <Pivot Grid.Row="1">
+            <PivotItem Header="下载中">
+                <ScrollViewer>
+                    <ListView x:Name="DownloadListView" SelectionMode="None" 
+                              ItemContainerStyle="{StaticResource ListViewStyle1}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="dl:IBiliDownload">
+                                <Grid Height="80">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"
+                                       FontFamily="Microsoft Yahei UI" 
+                                       FontSize="25"
+                                       FontStyle="Normal"
+                                       VerticalAlignment="Center" 
+                                       Margin="0 0 0 0" 
+                                       HorizontalAlignment="Left" 
+                                       Text="{x:Bind DownloadName}" />
+                                        <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <TextBlock Text="{x:Bind CurrentSpeed,Mode=OneWay,Converter={StaticResource speedConverter}}" FontFamily="Microsoft Yahei UI"
+                                           FontSize="15"
+                                           FontWeight="Light"
+                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <TextBlock Text="{x:Bind Status,Mode=OneWay,Converter={StaticResource statusConverter}}" FontFamily="Microsoft Yahei UI"
+                                           FontSize="15"
+                                           FontWeight="Light"
+                                           VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <Button x:Name="PauseOrResumeBtn" Click="PauseOrResumeBtn_Click" Content="{x:Bind Status,Mode=OneWay,Converter={StaticResource statusConverter2}}" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                                            <Button Click="CancelBtn_Click" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <ProgressBar Margin="0 0 0 10" Height="20" Value="{Binding CurrentProgress}"
+                                         Maximum="{Binding FullProgress}"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </PivotItem>
+            <PivotItem Header="已完成">
+                <SemanticZoom ScrollViewer.IsHorizontalScrollChainingEnabled="False">
+                    <SemanticZoom.ZoomedInView>
+                        <ListView SelectionMode="None" x:Name="CompleteListView"
+                                  ItemsSource="{x:Bind completeGroups.View}"
+                                  ItemContainerStyle="{StaticResource ListViewStyle1}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local:Complete">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Bind Name}"
+                                                   FontSize="20" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <TextBlock Text="{x:Bind Size,Converter={StaticResource sizeConverter}}" Margin="0,0,20,0" 
+                                                       VerticalAlignment="Center" FontSize="20"/>
+                                            <HyperlinkButton VerticalAlignment="Center" Content="📽" FontSize="20" Click="CompleteItemPlayBtn_Click"/>
+                                            <HyperlinkButton VerticalAlignment="Center" Content="📂" FontSize="20" Click="CompleteItemFolderBtn_Click"/>
+                                            <HyperlinkButton VerticalAlignment="Center" Content="❌" FontSize="20" Click="CompleteItemRemoveBtn_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate x:DataType="local:CompleteGroup">
+                                            <TextBlock Text="{x:Bind Title}" FontSize="24"/>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                        </ListView>
+                    </SemanticZoom.ZoomedInView>
+                    <SemanticZoom.ZoomedOutView>
+                        <ListView SelectionMode="None" x:Name="CompleteGroupListView"
+                                  ItemsSource="{x:Bind completeGroups.View.CollectionGroups}"
+                                  ItemContainerStyle="{StaticResource ListViewStyle1}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Group.Title}" FontSize="30" />
+                                        <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Bottom"
+                                                   Text="{Binding Group.Completes.Count,Converter={StaticResource countConverter}}" 
+                                                   FontSize="20"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>
