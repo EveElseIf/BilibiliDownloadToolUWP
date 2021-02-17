@@ -1,8 +1,10 @@
-﻿using BilibiliDownloadTool.Core.Bangumi;
+﻿using BilibiliDownloadTool.Controls;
+using BilibiliDownloadTool.Core.Bangumi;
+using BilibiliDownloadTool.Core.Exceptions;
 using BilibiliDownloadTool.Core.Helpers;
 using BilibiliDownloadTool.Core.Video;
-using BilibiliDownloadTool.Dialogs;
 using BilibiliDownloadTool.Pages.ResultPages;
+using NLog;
 using System;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
@@ -17,9 +19,15 @@ namespace BilibiliDownloadTool.Pages
     /// </summary>
     public sealed partial class SearchHomePage : Page
     {
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         public SearchHomePage()
         {
             this.InitializeComponent();
+            this.SearchTextBox.KeyDown += (s, e) =>
+            {
+                if (e.Key != Windows.System.VirtualKey.Enter) return;
+                SearchBtn_Click(null, null);
+            };
         }
         private void SearchProgress()
         {
@@ -42,8 +50,7 @@ namespace BilibiliDownloadTool.Pages
             var result = AnalyzeUrl(searchContent);
             if (string.IsNullOrWhiteSpace(result.Item2))//输入了无效的url
             {
-                var dialog = new NoticeDialog("提示", "输入了无效的url", "确定");
-                await dialog.ShowAsync();
+                ShowNoticeFlyout("输入了无效的url");
                 return;
             }
             SearchProgress();
@@ -84,10 +91,21 @@ namespace BilibiliDownloadTool.Pages
             catch (Exception ex)
             {
                 Reset();
-                var dialog = new ExceptionDialog(ex);
-                await dialog.ShowAsync();
+                if (ex is VideoNotFoundException or ArgumentException
+                    or UnauthorizedAccessException or ParsingVideoException)
+                    ShowNoticeFlyout(ex.Message);
+                else
+                {
+                    ShowNoticeFlyout("发生错误，请查看日志文件");
+                    _logger.Error(ex);
+                }
                 return;
             }
+        }
+        private void ShowNoticeFlyout(string info)
+        {
+            var flyout = new NoticeFlyout("提示", info);
+            flyout.ShowAt(this.SearchBtn);
         }
         private const string bvRegex = "[B|b][V|v][a-z|A-Z|0-9]*";
         private const string avRegex = "[A|a][V|v][0-9]*";

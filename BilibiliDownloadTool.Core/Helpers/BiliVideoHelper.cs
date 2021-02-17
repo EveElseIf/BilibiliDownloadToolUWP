@@ -20,7 +20,10 @@ namespace BilibiliDownloadTool.Core.Helpers
         {
             if (string.IsNullOrEmpty(bv)) throw new ArgumentException("bv为空");
             var json = await HttpHelper.GetJsonAsync(VIDEO_INFO_API, sessdata, $"bvid={bv}");
-            if (json.code == 403) throw new UnauthorizedAccessException("无权限访问该视频");
+            if (json.code == -403) throw new UnauthorizedAccessException("无权限访问该视频");
+            if (json.code == -404) throw new VideoNotFoundException("视频不存在");
+            if (json.code == -400) throw new ArgumentException("请求错误，请检查参数是否合法");
+            if (json.code == 62002) throw new UnauthorizedAccessException("稿件不可见");
             if (json.code != 0) throw new ParsingVideoException();
             return GetVideoMaster(json);
         }
@@ -34,7 +37,10 @@ namespace BilibiliDownloadTool.Core.Helpers
         {
             if (av == 0) throw new ArgumentException("av不合法");
             var json = await HttpHelper.GetJsonAsync(VIDEO_INFO_API, sessdata, $"aid={av}");
-            if (json.code == 403) throw new UnauthorizedAccessException("无权限访问该视频");
+            if (json.code == -403) throw new UnauthorizedAccessException("无权限访问该视频");
+            if (json.code == -404) throw new VideoNotFoundException("视频不存在");
+            if (json.code == -400) throw new ArgumentException("请求错误，请检查参数是否合法");
+            if (json.code == 62002) throw new UnauthorizedAccessException("稿件不可见");
             if (json.code != 0) throw new ParsingVideoException();
             return GetVideoMaster(json);
         }

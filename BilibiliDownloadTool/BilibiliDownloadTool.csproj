@@ -123,6 +123,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BiliUser.cs" />
+    <Compile Include="Controls\NoticeFlyout.cs" />
+    <Compile Include="Controls\NoticeFlyoutControl.xaml.cs">
+      <DependentUpon>NoticeFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ExceptionDialog.xaml.cs" />
     <Compile Include="Dialogs\MutipleDownloadDialog.xaml.cs" />
     <Compile Include="Dialogs\NoticeDialog.xaml.cs" />
@@ -179,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\NoticeFlyoutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ExceptionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
