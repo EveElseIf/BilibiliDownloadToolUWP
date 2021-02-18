@@ -92,7 +92,11 @@ namespace BilibiliDownloadTool.Pages
 
         private async void CompleteItemPlayBtn_Click(object sender, RoutedEventArgs e)
         {
-            _ = Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(((sender as HyperlinkButton).DataContext as Complete).Path));
+            var item = (sender as HyperlinkButton).DataContext as Complete;
+            if(item.Type == BiliDownloadType.Video)
+                _ = Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(item.Path));
+            if (item.Type == BiliDownloadType.Manga)
+                _ = Launcher.LaunchFolderPathAsync(item.Path);
         }
 
         private void CompleteItemFolderBtn_Click(object sender, RoutedEventArgs e)
@@ -115,6 +119,7 @@ namespace BilibiliDownloadTool.Pages
         public string Path { get; set; }
         public long Size { get; set; }
         public int Id { get; set; }
+        public BiliDownloadType Type { get; set; }
     }
     public class CompleteGroup
     {

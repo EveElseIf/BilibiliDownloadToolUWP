@@ -1,5 +1,6 @@
 ﻿using BilibiliDownloadTool.Core;
 using BilibiliDownloadTool.Dialogs;
+using BilibiliDownloadTool.Pages.ResultPages;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.ObjectModel;
@@ -62,7 +63,7 @@ namespace BilibiliDownloadTool.Pages
                 Header = master.Title,
                 IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource()
                 {
-                    Symbol = Symbol.Video
+                    Symbol = typeof(TPage) == typeof(BiliMangaMasterResultPage) ? Symbol.Bookmarks : Symbol.Video
                 },
                 Content = frame
             };

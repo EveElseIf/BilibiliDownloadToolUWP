@@ -108,31 +108,14 @@
                                     </DataTemplate>
                                 </cui:AdaptiveGridView.ItemTemplate>
                                 <cui:AdaptiveGridView.ItemContainerTransitions>
-                                    <EntranceThemeTransition FromHorizontalOffset="400"/>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition FromHorizontalOffset="400"/>
+                                    </TransitionCollection>
                                 </cui:AdaptiveGridView.ItemContainerTransitions>
                             </cui:AdaptiveGridView>
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="追番">
-                        <!--<GridView x:Name="BangumiListGridView" Loaded="BangumiListGridView_Loaded" IsItemClickEnabled="True" ItemClick="BangumiListGridView_ItemClick">
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="local:BangumiViewModel">
-                                    <Grid Width="300" Margin="20">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition Height="60"/>
-                                        </Grid.RowDefinitions>
-                                        <Image Grid.Row="0" Width="300" Stretch="Uniform" Source="{x:Bind CoverImg}"/>
-                                        <TextBlock Grid.Row="1" Text="{x:Bind Title}" TextWrapping="Wrap" FontFamily="Microsoft Yahei UI" FontSize="20"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                            <GridView.ItemContainerTransitions>
-                                <TransitionCollection>
-                                    <EntranceThemeTransition FromHorizontalOffset="400"/>
-                                </TransitionCollection>
-                            </GridView.ItemContainerTransitions>
-                        </GridView>-->
                         <cui:AdaptiveGridView x:Name="BangumiListGridView" 
                                               DesiredWidth="320"
                                               ani:ReorderGridAnimation.Duration="300"

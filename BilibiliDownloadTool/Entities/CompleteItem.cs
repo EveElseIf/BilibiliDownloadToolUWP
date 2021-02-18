@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BilibiliDownloadTool.Download;
 using BilibiliDownloadTool.Pages;
 using FreeSql.DataAnnotations;
 
@@ -16,12 +17,14 @@ namespace BilibiliDownloadTool.Entities
         public string Name { get; set; }
         public string Path { get; set; }
         public long Size { get; set; }
+        public BiliDownloadType Type { get; set; }
         public static explicit operator Complete(CompleteItem item) => new Complete()
         {
             Name = item.Name,
             Path = item.Path,
             Size = item.Size,
-            Id = item.Id
+            Id = item.Id,
+            Type = item.Type
         };
     }
 }

@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BilibiliDownloadTool.Core.Helpers
 {
     internal static class HttpHelper
     {
-        private static readonly HttpClient client = new Func<HttpClient>(() =>
+        private static readonly HttpClient _client = new Func<HttpClient>(() =>
         {
             var c = new HttpClient();
             c.DefaultRequestHeaders.Add("referer", "http://www.bilibili.com");
@@ -39,12 +41,24 @@ namespace BilibiliDownloadTool.Core.Helpers
         {
             CheckSessdata(sessdata);
             if (!string.IsNullOrWhiteSpace(queryString)) url += "?" + queryString;
-            return await client.GetStringAsync(url);
+            return await _client.GetStringAsync(url);
+        }
+        public static async Task<Stream> GetStreamAsync(string url,string sessdata = null)
+        {
+            CheckSessdata(sessdata);
+            return await _client.GetStreamAsync(url);
         }
         private static void CheckSessdata(string sessdata)
         {
-            if (_lastSESSDATA != sessdata && sessdata != null) client.DefaultRequestHeaders.Add("Cookie", $"SESSDATA={sessdata}");
+            if (_lastSESSDATA != sessdata && sessdata != null) _client.DefaultRequestHeaders.Add("Cookie", $"SESSDATA={sessdata}");
             _lastSESSDATA = sessdata;
+        }
+        public static async Task<dynamic> PostJsonAsync(string url,string jsonContent,string sessdata = null)
+        {
+            CheckSessdata(sessdata);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var resp = await _client.PostAsync(url, content);
+            return JsonConvert.DeserializeObject<dynamic>(await resp.Content.ReadAsStringAsync());
         }
     }
 }

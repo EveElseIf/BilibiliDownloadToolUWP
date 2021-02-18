@@ -115,6 +115,14 @@ namespace BilibiliDownloadTool
                 {
                     _ = Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(arg[1]));
                 }
+                else if (arg[0] == "manga")
+                {
+                    _ = Launcher.LaunchFolderPathAsync(arg[1]);
+                }
+                else
+                {
+
+                }
             }
         }
 

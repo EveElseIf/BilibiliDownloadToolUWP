@@ -5,10 +5,64 @@
     xmlns:local="using:BilibiliDownloadTool.Pages.ResultPages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cui="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:control="using:Microsoft.UI.Xaml.Controls"
+    xmlns:bili="using:BilibiliDownloadTool.Core.Manga"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <control:TeachingTip x:Name="Tip" Title="已创建下载任务"
+                             PreferredPlacement="BottomRight"
+                             IsLightDismissEnabled="True">
+            <control:TeachingTip.IconSource>
+                <control:SymbolIconSource Symbol="Add"/>
+            </control:TeachingTip.IconSource>
+        </control:TeachingTip>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="350"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Margin="20" x:Name="CoverImg" d:Source="/Assets/StoreLogo.png"/>
+                <StackPanel Grid.Column="1" Margin="20" Orientation="Vertical">
+                    <TextBlock d:Text="标题" FontSize="50" Text="{x:Bind _master.Title}"/>
+                    <TextBlock Margin="0,20,0,0" d:Text="内容测试。。。。。aoifjpawioefjwpoafjpajfods" TextWrapping="Wrap"
+                                       Text="{x:Bind _master.Evaluate}" FontSize="25"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Margin="20">
+                <GridView x:Name="MangaGridView" SelectionMode="Single"
+                                  ItemClick="MangaGridView_ItemClick" IsItemClickEnabled="True"
+                                              ItemsSource="{x:Bind _master.EpList}">
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="WhiteSmoke"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="bili:BiliManga">
+                            <Grid Width="250">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="5,0,0,0"
+                                                   FontSize="20"
+                                                   Text="{x:Bind TitleToString()}"/>
+                                <TextBlock Grid.Column="1" Margin="0,0,5,0" FontSize="15"
+                                                   Text="🔒" Visibility="{x:Bind IsLocked}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

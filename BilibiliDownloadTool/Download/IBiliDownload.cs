@@ -14,13 +14,14 @@ namespace BilibiliDownloadTool.Download
         void PauseOrResume();
         string DownloadName { get; }
         string Title { get; }
+        BiliDownloadType Type { get; }
         /// <summary>
         /// 下载完成后再访问该属性,否则会返回null
         /// </summary>
         string OutputPath { get; }
         long CurrentProgress { get; }
         long FullProgress { get; }
-        long CurrentSpeed { get; }
+        string CurrentSpeed { get; }
         BiliDownloadStatus Status { get; }
         IList<IBiliDownloadPart> PartList { get; }
         StorageFolder CacheFolder { get; }

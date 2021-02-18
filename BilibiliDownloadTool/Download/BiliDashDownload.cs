@@ -18,6 +18,7 @@ namespace BilibiliDownloadTool.Download
     {
         public string DownloadName { get; private set; }
         public string Title { get; private set; }
+        public BiliDownloadType Type { get; private set; } = BiliDownloadType.Video;
         #region binding properties
         private long currentProgress;
 
@@ -33,12 +34,21 @@ namespace BilibiliDownloadTool.Download
             get { return fullProgress; }
             private set { fullProgress = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FullProgress))); }
         }
-        private long currentSpeed;
 
-        public long CurrentSpeed
+        public string CurrentSpeed
         {
-            get => currentSpeed;
-            private set { currentSpeed = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentSpeed))); }
+            get
+            {
+                var input = speed;
+                if (input >= 1000000) return $"{string.Format("{0:f2}", (double)input / 1000000)}MB/s";
+                else return $"{string.Format("{0:f2}", (double)input / 1000)}KB/s";
+            }
+        }
+        private long speed;
+        private long Speed
+        {
+            get => speed;
+            set { speed = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentSpeed))); }
         }
         private BiliDownloadStatus status;
 
@@ -119,7 +129,7 @@ namespace BilibiliDownloadTool.Download
             OutputPath = outputFile.Path;
             Status = BiliDownloadStatus.Completed;
             if (Settings.CompleteNotice)//如果需要通知，就发送下载完成通知
-                Helper.ShowCompleteNotice(this);
+                Helper.ShowVideoCompleteNotice(this);
             Completed?.Invoke(this, null);
             DownloadPage.Current.RemoveDownload(this);
         }
@@ -158,7 +168,7 @@ namespace BilibiliDownloadTool.Download
                 }
                 CurrentProgress = cP;
                 FullProgress = fP;
-                if (lastBytes != 0) CurrentSpeed = cP - lastBytes;
+                if (lastBytes != 0) Speed = cP - lastBytes;
                 lastBytes = cP;
                 await Task.Delay(1000);
             }

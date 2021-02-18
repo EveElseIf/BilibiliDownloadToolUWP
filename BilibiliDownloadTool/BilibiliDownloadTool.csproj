@@ -123,6 +123,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BiliUser.cs" />
+    <Compile Include="Controls\MangaFlyout.cs" />
+    <Compile Include="Controls\MangaFlyoutControl.xaml.cs">
+      <DependentUpon>MangaFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NoticeFlyout.cs" />
     <Compile Include="Controls\NoticeFlyoutControl.xaml.cs">
       <DependentUpon>NoticeFlyoutControl.xaml</DependentUpon>
@@ -136,6 +140,8 @@
     <Compile Include="Download\BiliDashDownload.cs" />
     <Compile Include="Download\BiliDashDownloadPart.cs" />
     <Compile Include="Download\BiliDownloadStatus.cs" />
+    <Compile Include="Download\BiliDownloadType.cs" />
+    <Compile Include="Download\BiliMangaDownload.cs" />
     <Compile Include="Download\Helper.cs" />
     <Compile Include="Download\IBiliDownload.cs" />
     <Compile Include="Download\IBiliDownloadPart.cs" />
@@ -158,6 +164,7 @@
     <Compile Include="Pages\UserPage.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BiliUserManager.cs" />
+    <Compile Include="Services\MangaDownloadManager.cs" />
     <Compile Include="Services\SqliteData.cs" />
     <Compile Include="Services\VideoDownloadManager.cs" />
     <Compile Include="Settings.cs" />
@@ -183,6 +190,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\MangaFlyoutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NoticeFlyoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

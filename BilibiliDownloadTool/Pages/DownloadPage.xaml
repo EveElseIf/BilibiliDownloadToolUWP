@@ -58,7 +58,7 @@
                                        HorizontalAlignment="Left" 
                                        Text="{x:Bind DownloadName}" />
                                         <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <TextBlock Text="{x:Bind CurrentSpeed,Mode=OneWay,Converter={StaticResource speedConverter}}" FontFamily="Microsoft Yahei UI"
+                                            <TextBlock Text="{x:Bind CurrentSpeed,Mode=OneWay}" FontFamily="Microsoft Yahei UI"
                                            FontSize="15"
                                            FontWeight="Light"
                                            VerticalAlignment="Center" Margin="0,0,10,0"/>

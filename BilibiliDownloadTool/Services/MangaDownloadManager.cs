@@ -1,31 +1,34 @@
-﻿using BilibiliDownloadTool.Core.Video;
+﻿using BilibiliDownloadTool.Core.Helpers;
+using BilibiliDownloadTool.Core.Manga;
 using BilibiliDownloadTool.Dialogs;
 using BilibiliDownloadTool.Download;
 using BilibiliDownloadTool.Pages;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BilibiliDownloadTool.Services
 {
-    public static class VideoDownloadManager
+    public static class MangaDownloadManager
     {
         private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
-        public static async Task CreateDashDownloadAsync(BiliVideo video, DashVideoInfo videoInfo, DashAudioInfo audioInfo)
+        public static async Task CreateMangaDownloadAsync(BiliManga manga,int mcid,string title)
         {
             try
             {
-                var download = await BiliDashDownload.CreateAsync(video, videoInfo, audioInfo, Settings.SESSDATA);
+                var download = await BiliMangaDownload.CreateAsync(manga, mcid, title);
                 DownloadPage.Current.CreateDownload(download);
                 download.Completed += async (s, e) =>
                 {
-                    await LogCompleteAsync(s as BiliDashDownload);
-                    _logger.Info($"下载完成 {video.Title}-{video.Name}({video.Bv},P{video.Order})");
+                    await LogCompleteAsync(s as IBiliDownload);
+                    _logger.Info($"下载完成 {title}-{manga.Title}({mcid},{manga.Epid})");
                 };
                 var task = download.StartAsync();
-                _logger.Info($"开始下载 {video.Title}-{video.Name}({video.Bv},P{video.Order})");
+                _logger.Info($"开始下载 {title}-{manga.Title}({mcid},P{manga.Epid})");
                 await task;
             }
             catch (WebException e)
@@ -51,7 +54,7 @@ namespace BilibiliDownloadTool.Services
                 Title = download.Title,
                 Path = download.OutputPath,
                 Size = download.FullProgress,
-                Type = download.Type
+                Type = BiliDownloadType.Manga
             };
             item.Id = (int)await App.SqliteData.AddCompleteItem(item);
             var group = DownloadPage.Current.Groups;
@@ -71,7 +74,7 @@ namespace BilibiliDownloadTool.Services
                 });
             }
         }
-        public static async Task CancelDashDownloadAsync(IBiliDownload download)
+        public static async Task CancelMangaDownloadAsync(IBiliDownload download)
         {
             try
             {

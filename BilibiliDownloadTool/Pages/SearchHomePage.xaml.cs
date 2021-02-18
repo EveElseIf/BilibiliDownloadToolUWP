@@ -2,6 +2,7 @@
 using BilibiliDownloadTool.Core.Bangumi;
 using BilibiliDownloadTool.Core.Exceptions;
 using BilibiliDownloadTool.Core.Helpers;
+using BilibiliDownloadTool.Core.Manga;
 using BilibiliDownloadTool.Core.Video;
 using BilibiliDownloadTool.Pages.ResultPages;
 using NLog;
@@ -79,6 +80,9 @@ namespace BilibiliDownloadTool.Pages
                         Reset();
                         break;
                     case UrlType.Mc:
+                        var manga = await BiliMangaHelper.GetMangaMasterAsync(long.Parse(result.Item2), Settings.SESSDATA);
+                        SearchPage.Current.HandleMaster<BiliMangaMasterResultPage, BiliMangaMaster>(manga);
+                        Reset();
                         break;
                     case UrlType.Error:
                         Reset();
@@ -111,12 +115,14 @@ namespace BilibiliDownloadTool.Pages
         private const string avRegex = "[A|a][V|v][0-9]*";
         private const string ssRegex = "[S|s][S|s][0-9]*";
         private const string epRegex = "[E|e][P|p][0-9]*";
+        private const string mcRegex = "[M|m][C|c][0-9]*";
         public (UrlType, string) AnalyzeUrl(string input)
         {
             if (Regex.IsMatch(input, bvRegex)) return (UrlType.Bv, Regex.Match(input, bvRegex).Value);
             if (Regex.IsMatch(input, avRegex)) return (UrlType.Av, Regex.Match(input, avRegex).Value.Substring(2));
             if (Regex.IsMatch(input, ssRegex)) return (UrlType.Ss, Regex.Match(input, ssRegex).Value.Substring(2));
             if (Regex.IsMatch(input, epRegex)) return (UrlType.Ep, Regex.Match(input, epRegex).Value.Substring(2));
+            if (Regex.IsMatch(input, mcRegex)) return (UrlType.Mc, Regex.Match(input, mcRegex).Value.Substring(2));
             return (UrlType.Error, null);
         }
 
